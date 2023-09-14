@@ -40,7 +40,7 @@ MQTT_PASSWORD=
 MQTT_PROTOCOL=
 ```
 
-4. Adopt the subscriptions object in the `example.js` to your need:
+4. Customize the subscriptions object in `example.js` to fit your needs. I recommend using [MQTT-Explorer](https://github.com/thomasnordquist/MQTT-Explorer) to identify topics and key mappings.
 
 ```javascript
 {
@@ -64,13 +64,35 @@ MQTT_PROTOCOL=
 node example.js
 ```
 
-## Example mqtt device
+## Example MQTT device
 
 [Shelly Plus 1PM](https://www.shelly.com/de/products/shop/shelly-plus-1-pm-2-pack/shelly-plus-1-pm) - WiFi Relais and Energy Meter
 
 ![Image](https://www.shelly.com/_Resources/Persistent/d/4/4/d/d44ddf8caa0797bce14639b6082055670a1f14f9/shpl1pm-shop6-1000x1000.webp)
 
-## Example console output
+## Example MQTT message
+
+```json
+{
+	"id": 0,
+	"source": "init",
+	"output": true,
+	"apower": 0.0,
+	"voltage": 235.0,
+	"current": 0.034,
+	"aenergy": {
+		"total": 13371.121,
+		"by_minute": [0.0, 0.0, 0.0],
+		"minute_ts": 1694723159
+	},
+	"temperature": {
+		"tC": 56.9,
+		"tF": 134.4
+	}
+}
+```
+
+## Example output of example.js
 
 ```
 [mqttJsonParser] MQTT connection successfully
