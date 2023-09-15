@@ -1,41 +1,49 @@
 const mqtt = require("mqtt");
 
+let mqttJsonParser_client;
+let mqttJsonParser_logger;
+
 module.exports = {
+
     start: (options) =>
     {
         const { credentials, subscriptions, logger } = options;
 
-        const client = mqtt.connect(credentials);
+        mqttJsonParser_logger = logger;
+        mqttJsonParser_client = mqtt.connect(credentials);
 
-        client.on("offline", () =>
+        mqttJsonParser_client.on("close", () =>
         {
-            logger("MQTT broker connection failed");
+            mqttJsonParser_logger("MQTT connection closed");
+            module.exports.stop();
         });
 
-        client.on("error", (error) =>
+        mqttJsonParser_client.on("offline", () =>
         {
-            logger(error);
+            mqttJsonParser_logger("MQTT broker connection failed");
+            module.exports.stop();
         });
 
-        client.on("close", () =>
+        mqttJsonParser_client.on("error", (error) =>
         {
-            logger("MQTT connection closed");
+            mqttJsonParser_logger(error);
+            module.exports.stop();
         });
 
-        client.on('connect', () =>
+        mqttJsonParser_client.on('connect', () =>
         {
-            logger("MQTT connection successfully");
+            mqttJsonParser_logger("MQTT connection successfully");
 
             subscriptions.forEach((sub) =>
             {
                 if (sub.enabled)
                 {
-                    client.subscribe(sub.topic);
+                    mqttJsonParser_client.subscribe(sub.topic);
                 }
             });
         });
 
-        client.on('message', (topic, message) =>
+        mqttJsonParser_client.on('message', (topic, message) =>
         {
             const parsedMessage = JSON.parse(message.toString());
 
@@ -71,12 +79,30 @@ module.exports = {
                                 {
                                     mapping.onMessage(value);
                                 }
-
                             }
                         }
                     });
                 }
             });
         });
+    },
+    stop: () => 
+    {
+        if (mqttJsonParser_client) 
+        {
+            mqttJsonParser_client.end(true, () =>
+            {
+                if (mqttJsonParser_logger)
+                {
+                    mqttJsonParser_logger("MQTT broker connection is closed now");
+                }
+                mqttJsonParser_client = null;
+            });
+        }
+    },
+    isRunning: () => 
+    {
+        return mqttJsonParser_client !== null;
     }
+
 };
