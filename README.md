@@ -6,7 +6,7 @@ This Node.js library provides an easy solution for receiving MQTT messages, extr
 
 I developed this library to facilitate data collection from various MQTT-enabled devices in my home network. While the objective is to store this data in a database for visualization via Grafana, I found existing solutions like NodeRED to be less intuitive and customizable. Moreover, NodeRED often proves too resource-intensive for small-scale projects, especially when running on single-board computer.
 
-Given my preference for modular design, I've divided the process into distinct stages for parsing and storing, using a separate Node.js plugin for the storage component.
+Checkout this repository to see the script based solution, utilizing the mqttJsonParser: [MQTT-Influx-Bridge](https://github.com/mgiesen/MQTT-Influx-Bridge)
 
 ## Prerequisites
 
