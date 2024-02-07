@@ -1,6 +1,7 @@
 const mqtt = require("mqtt");
 
 let mqttJsonParser_client;
+let log;
 
 const safeLogger = (logger) => (...messages) =>
 {
@@ -15,7 +16,7 @@ module.exports = {
     start: (options) =>
     {
         const { credentials, subscriptions, logger } = options;
-        const log = safeLogger(logger);
+        log = safeLogger(logger);
 
         mqttJsonParser_client = mqtt.connect(credentials);
 
