@@ -39,7 +39,7 @@ module.exports = {
 
         mqttJsonParser_client.on('connect', () =>
         {
-            log("MQTT connection successfully");
+            log("MQTT connection successful");
 
             subscriptions.forEach((sub) =>
             {
