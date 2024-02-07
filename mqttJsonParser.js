@@ -1,38 +1,45 @@
 const mqtt = require("mqtt");
 
 let mqttJsonParser_client;
-let mqttJsonParser_logger;
+
+const safeLogger = (logger) => (...messages) =>
+{
+    if (typeof logger === 'function')
+    {
+        logger(...messages);
+    }
+};
 
 module.exports = {
 
     start: (options) =>
     {
         const { credentials, subscriptions, logger } = options;
+        const log = safeLogger(logger);
 
-        mqttJsonParser_logger = logger;
         mqttJsonParser_client = mqtt.connect(credentials);
 
         mqttJsonParser_client.on("close", () =>
         {
-            mqttJsonParser_logger("MQTT connection closed");
+            log("MQTT connection closed");
             module.exports.stop();
         });
 
         mqttJsonParser_client.on("offline", () =>
         {
-            mqttJsonParser_logger("MQTT broker connection failed");
+            log("MQTT broker connection failed");
             module.exports.stop();
         });
 
         mqttJsonParser_client.on("error", (error) =>
         {
-            mqttJsonParser_logger(error);
+            log(error);
             module.exports.stop();
         });
 
         mqttJsonParser_client.on('connect', () =>
         {
-            mqttJsonParser_logger("MQTT connection successfully");
+            log("MQTT connection successfully");
 
             subscriptions.forEach((sub) =>
             {
@@ -92,10 +99,8 @@ module.exports = {
         {
             mqttJsonParser_client.end(true, () =>
             {
-                if (mqttJsonParser_logger)
-                {
-                    mqttJsonParser_logger("MQTT broker connection is closed now");
-                }
+                log("MQTT broker connection is closed now");
+
                 mqttJsonParser_client = null;
             });
         }
