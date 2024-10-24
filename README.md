@@ -68,8 +68,6 @@ node example.js
 
 [Shelly Plus 1PM](https://www.shelly.com/de/products/shop/shelly-plus-1-pm-2-pack/shelly-plus-1-pm) - WiFi Relais and Energy Meter
 
-![Image](https://www.shelly.com/_Resources/Persistent/d/4/4/d/d44ddf8caa0797bce14639b6082055670a1f14f9/shpl1pm-shop6-1000x1000.webp)
-
 ## Example MQTT message
 
 ```json
